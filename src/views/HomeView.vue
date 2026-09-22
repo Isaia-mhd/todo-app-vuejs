@@ -13,7 +13,7 @@
         <button @click="clear" class="p-2 text-xs text-white bg-green-700 rounded-md cursor-pointer">Clear</button>
       </form>
     </div>
-    <TaskList :tasks="filters"/>
+    <TaskList :tasks="filters" @deletetask="removeTask"/>
     
   </div>
 </template>
@@ -86,6 +86,10 @@ export default {
     clear()
     {
       this.type = null
+    },
+    removeTask(taskToRemove)
+    {
+      this.tasks = this.tasks.filter((task) => task.id != taskToRemove)
     }
   },
   computed: {
