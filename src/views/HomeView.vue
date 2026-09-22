@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="flex justify-between items-center gap-2 mb-6">
+    <div class="flex justify-between items-center gap-2 mb-3">
       <form @submit.prevent="create" class="flex gap-2">
         <input v-model="title" class="w-sm text-white text-sm p-2 rounded-md border border-gray-400" type="text" placeholder="Learn something...">
         <button type="submit" class="p-2 text-xs text-white bg-green-700 rounded-md cursor-pointer">Create</button>
@@ -13,6 +13,7 @@
         <button @click="clear" class="p-2 text-xs text-white bg-green-700 rounded-md cursor-pointer">Clear</button>
       </form>
     </div>
+    <p v-if="error" class="text-red-500 text-sm mb-6">{{ error }}</p>
     <TaskList :tasks="filters" @deletetask="removeTask"/>
     
   </div>
@@ -81,6 +82,7 @@ export default {
       ],
       type: null,
       title: '',
+      error: null
     }
   },
   methods: {
@@ -94,6 +96,11 @@ export default {
     },
     create()
     {
+      if(!this.title)
+      {
+        this.error = 'The title field is required'
+        return;
+      }      
       this.tasks.push({
         id: Date(),
         title: this.title,
@@ -102,6 +109,7 @@ export default {
         completed: false
       })
       this.title = ''
+      this.error = null
     }
   },
   computed: {
