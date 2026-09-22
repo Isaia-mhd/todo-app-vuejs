@@ -2,8 +2,8 @@
   <div class="home">
     <div class="flex justify-between items-center gap-2 mb-6">
       <form @submit.prevent="create" class="flex gap-2">
-        <input class="w-sm text-white text-sm p-2 rounded-md border border-gray-400" type="text" placeholder="Learn something...">
-        <button class="p-2 text-xs text-white bg-green-700 rounded-md cursor-pointer">Create</button>
+        <input v-model="title" class="w-sm text-white text-sm p-2 rounded-md border border-gray-400" type="text" placeholder="Learn something...">
+        <button type="submit" class="p-2 text-xs text-white bg-green-700 rounded-md cursor-pointer">Create</button>
       </form>
       <form class="flex gap-2">
         <select v-model="type" class="w-xs text-white bg-slate-800 text-sm p-2 rounded-md border border-gray-400">
@@ -79,7 +79,8 @@ export default {
           priority: "medium",
         },
       ],
-      type: null
+      type: null,
+      title: '',
     }
   },
   methods: {
@@ -90,6 +91,17 @@ export default {
     removeTask(taskToRemove)
     {
       this.tasks = this.tasks.filter((task) => task.id != taskToRemove)
+    },
+    create()
+    {
+      this.tasks.push({
+        id: Date(),
+        title: this.title,
+        description: '',
+        priority: '',
+        completed: false
+      })
+      this.title = ''
     }
   },
   computed: {

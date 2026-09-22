@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-col gap-2">
+  <ul class="flex flex-col gap-2" v-if="tasks.length">
     <li v-for="task in tasks" :key="task.id" class="w-full flex justify-between py-3 px-3 bg-slate-900 text-white rounded-md">
         <div class="cursor-pointer flex gap-2 items-center">
           <Circle :size="18"/> 
@@ -11,6 +11,7 @@
         </div>
     </li>
   </ul>
+  <p class="text-center text-white" v-else>No task found.</p>
 </template>
 
 <script>
