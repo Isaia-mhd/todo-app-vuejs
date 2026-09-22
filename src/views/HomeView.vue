@@ -49,20 +49,16 @@ export default {
         this.error = 'The title field is required'
         return;
       } 
-
-      const tasks = JSON.parse(localStorage.getItem('tasks')) || []
       
-      tasks.push({
+      this.tasks.push({
         id: Date(),
         title: this.title,
         description: '',
         priority: '',
         completed: false
       })
-
-      localStorage.setItem('tasks', JSON.stringify(tasks))
-
-      this.tasks = JSON.parse(localStorage.getItem('tasks'))
+      
+      localStorage.setItem('tasks', JSON.stringify(this.tasks))
 
       this.title = ''
       this.error = null
