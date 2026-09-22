@@ -7,10 +7,10 @@
       </form>
       <form class="flex gap-2">
         <select v-model="type" class="w-xs text-white bg-slate-800 text-sm p-2 rounded-md border border-gray-400">
+          <option value="all">All</option>
           <option value="completed">Completed</option>
           <option value="progress">In progress</option>
         </select>
-        <button @click="clear" class="p-2 text-xs text-white bg-green-700 rounded-md cursor-pointer">Clear</button>
       </form>
     </div>
     <p v-if="error" class="text-red-500 text-sm mb-6">{{ error }}</p>
@@ -80,16 +80,12 @@ export default {
           priority: "medium",
         },
       ],
-      type: null,
+      type: 'all',
       title: '',
       error: null
     }
   },
   methods: {
-    clear()
-    {
-      this.type = null
-    },
     removeTask(taskToRemove)
     {
       this.tasks = this.tasks.filter((task) => task.id != taskToRemove)
