@@ -1,7 +1,19 @@
 <template>
   <div class="home">
-    <h2>Tasks</h2>
-    <TaskList :tasks="tasks" />
+    <div class="flex justify-between items-center gap-2 mb-6">
+      <form @submit.prevent="create" class="flex gap-2">
+        <input class="w-sm text-white text-sm p-2 rounded-md border border-gray-400" type="text" placeholder="Learn something...">
+        <button class="p-2 text-xs text-white bg-green-700 rounded-md cursor-pointer">Create</button>
+      </form>
+      <form class="flex gap-2">
+        <select v-model="type" class="w-xs text-white bg-slate-800 text-sm p-2 rounded-md border border-gray-400">
+          <option value="completed">Completed</option>
+          <option value="progress">In progress</option>
+        </select>
+        <button @click="clear" class="p-2 text-xs text-white bg-green-700 rounded-md cursor-pointer">Clear</button>
+      </form>
+    </div>
+    <TaskList :tasks="filters"/>
     
   </div>
 </template>
@@ -67,7 +79,29 @@ export default {
           priority: "medium",
         },
       ],
+      type: null
+    }
+  },
+  methods: {
+    clear()
+    {
+      this.type = null
+    }
+  },
+  computed: {
+    filters()
+    {
+      if(this.type && this.type == 'completed')
+      {
+         return this.tasks.filter((task) => task.completed) 
+      } else if(this.type && this.type == 'progress')
+      {
+        return this.tasks.filter((task) => !task.completed)   
+      } else {
+        return this.tasks
+      }
     }
   }
+
 }
 </script>
