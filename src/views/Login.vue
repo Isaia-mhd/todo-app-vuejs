@@ -21,8 +21,8 @@ import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import useAuthStore from '@/stores/auth'
-const email = ref('isaiamohamed21@gmail.com')
-const password = ref('admin')
+const email = ref('')
+const password = ref('')
 
 const auth = useAuthStore()
 const { user } = storeToRefs(auth)
