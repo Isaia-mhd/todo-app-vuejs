@@ -19,65 +19,66 @@
   </div>
 </template>
 
-<script>
+<script setup>
 // @ is an alias to /src
 import TaskList from '@/components/task/TaskList.vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import useAuthStore from '@/stores/auth'
+const auth = useAuthStore()
+const { user } = storeToRefs(auth)
+const router = useRouter()
 
-export default {
-  name: 'HomeView',
-  components: { TaskList },
-  data()
-  {
-    return {
-      tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-      type: 'all',
-      title: '',
-      error: null
+onMounted(() => {
+    if(!user.value)
+    {
+        router.push('/login')
     }
-  },
-  methods: {
-    removeTask(taskToRemove)
-    {
-      const tasks = this.tasks.filter((task) => task.id != taskToRemove)
-      localStorage.setItem('tasks', JSON.stringify(tasks))
-      this.tasks = JSON.parse(localStorage.getItem('tasks'))
-    },
-    create()
-    {
-      if(!this.title)
-      {
-        this.error = 'The title field is required'
-        return;
-      } 
-      
-      this.tasks.push({
-        id: Date(),
-        title: this.title,
-        description: '',
-        priority: '',
-        completed: false
-      })
-      
-      localStorage.setItem('tasks', JSON.stringify(this.tasks))
+})
 
-      this.title = ''
-      this.error = null
-    }
-  },
-  computed: {
-    filters()
-    {
-      if(this.type && this.type == 'completed')
-      {
-         return this.tasks.filter((task) => task.completed) 
-      } else if(this.type && this.type == 'progress')
-      {
-        return this.tasks.filter((task) => !task.completed)   
-      } else {
-        return this.tasks
-      }
-    }
-  }
+const tasks = ref(JSON.parse(localStorage.getItem('tasks'))) || ref([])
+const type = ref('all')
+const title = ref(null)
+const error = ref(null)
 
+const removeTask = (taskToRemove) => 
+{
+  const newTasks = tasks.value.filter((task) => task.id != taskToRemove)
+  localStorage.setItem('tasks', JSON.stringify(newTasks))
+  tasks.value = JSON.parse(localStorage.getItem('tasks'))
 }
+const create = () => 
+  {
+    if(!title.value)
+    {
+      this.error = 'The title field is required'
+      return;
+    } 
+    
+    tasks.value.push({
+      id: Date(),
+      title: title.value,
+      description: '',
+      priority: '',
+      completed: false
+    })
+    
+    localStorage.setItem('tasks', JSON.stringify(tasks.value))
+
+    title.value = null
+    error.value = null
+}
+
+const filters = computed(() => {
+    if(type.value == 'completed')
+    {
+        return tasks.value.filter((task) => task.completed) 
+    } else if(type.value == 'progress')
+    {
+      return tasks.value.filter((task) => !task.completed)   
+    } else {
+      return tasks.value
+    }
+})
 </script>

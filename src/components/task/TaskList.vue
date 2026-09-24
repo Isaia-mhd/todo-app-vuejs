@@ -42,27 +42,22 @@
   <p class="text-center text-white" v-else>No task found.</p>
 </template>
 
-<script>
+<script setup>
 import { Circle, CircleCheck, Trash, Pen } from '@lucide/vue'
-export default {
-    props: ['tasks'],
-    components: { Circle, CircleCheck, Trash, Pen },
-    methods: {
-      remove(id)
-      {
-        this.$emit('deletetask', id)
-      }
-    },
-    data()
-    {
-      return {
-        done: this.tasks.filter((task) => task.completed).length,
-        inprogress: this.tasks.filter((task) => !task.completed).length,
-      }
-    }
+import { defineProps, defineEmits } from 'vue'
 
+const props = defineProps({
+  tasks: { Type: Array, required: true },
+})
+const emit = defineEmits(['deletetask'])
 
+const done = props.tasks.filter((task) => task.completed).length
+const inprogress = props.tasks.filter((task) => !task.completed).length
+
+const remove = (id) => {
+  emit('deletetask', id)
 }
+
 </script>
 
 <style>

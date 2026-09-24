@@ -1,17 +1,22 @@
 <template>
-  <Layout />
+  <Layout v-if="authChecked"/>
+  <div class="w-full h-screen flex items-center justify-center text-2xl" v-else>Loading...</div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue'
 import Layout from "@/layouts/Layout.vue";
+import useAuthStore from '@/stores/auth'
+import { storeToRefs } from 'pinia';
 
-export default {
-  components: { Layout },
-  data() {
-    return {
-    };
-  },
-};
+
+const auth = useAuthStore();
+const { authChecked } = storeToRefs(auth)
+
+  onMounted(async() => {
+    await auth.getUser()
+  })
+
 </script>
 
 

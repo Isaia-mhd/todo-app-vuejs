@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
-
+import Login from '../views/Login.vue'
 const routes = [
   {
     path: '/',
@@ -13,6 +13,11 @@ const routes = [
     name: 'about',
     component: AboutView
     // route level code-splitting
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
   }
 ]
 
