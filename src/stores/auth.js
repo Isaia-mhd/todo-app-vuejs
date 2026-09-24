@@ -36,6 +36,21 @@ const useAuthStore = defineStore('auth', {
             }
             
         },
+
+        // create new user 
+        async register(infos)
+        {
+            try {
+                await this.getToken()
+
+                const res = await axios.post('/api/register', infos)
+                
+                return res.data
+
+            } catch (error) {
+                throw error
+            }
+        },
         
         // get user
         async getUser()

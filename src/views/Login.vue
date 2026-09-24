@@ -51,7 +51,6 @@ const handleLogin = async () => {
 
     } catch (error) {
         loading.value = false
-        console.log(error?.response);
         
     }
 }

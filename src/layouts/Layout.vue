@@ -7,6 +7,7 @@
       <div>
         <router-link v-for="item in menus" :key="item.name" :to="item.path" class="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ item.name }}</router-link>
         <router-link v-if="!user" to="/login" class="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</router-link>
+        <router-link v-if="!user" to="/register" class="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium">Register</router-link>
       </div>
     </nav>
 
