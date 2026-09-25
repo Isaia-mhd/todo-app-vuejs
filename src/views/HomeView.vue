@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="w-full max-w-6xl mx-auto">
     <div class="flex justify-between items-center gap-2 mb-3">
       <form @submit.prevent="create" class="flex gap-2">
         <input v-model="title" class="w-sm text-white text-sm p-2 rounded-md border border-gray-400" type="text" placeholder="Learn something...">
@@ -14,7 +14,7 @@
       </form>
     </div>
     <p v-if="error" class="text-red-500 text-sm mb-6">{{ error }}</p>
-    <TaskList :tasks="filters" @deletetask="removeTask"/>
+    <TaskList :tasks="tasks" @deletetask="removeTask" @updatedtask="newTaskUpdated"/>
     
   </div>
 </template>
@@ -45,40 +45,54 @@ const error = ref(null)
 const removeTask = (taskToRemove) => 
 {
   const newTasks = tasks.value.filter((task) => task.id != taskToRemove)
+  tasks.value = newTasks
   localStorage.setItem('tasks', JSON.stringify(newTasks))
-  tasks.value = JSON.parse(localStorage.getItem('tasks'))
 }
 const create = () => 
   {
-    if(!title.value)
+    if(title.value === "")
     {
-      this.error = 'The title field is required'
+      error.value = 'The title field is required'
       return;
     } 
     
     tasks.value.push({
-      id: Date(),
+      id: Date.now(),
       title: title.value,
       description: '',
       priority: '',
       completed: false
     })
     
+    // tasks.value = JSON.parse(localStorage.getItem('tasks'))
     localStorage.setItem('tasks', JSON.stringify(tasks.value))
 
     title.value = null
     error.value = null
+
 }
 
-const filters = computed(() => {
-    if(type.value == 'completed')
-    {
-        return tasks.value.filter((task) => task.completed) 
-    } else if(type.value == 'progress')
-    {
-      return tasks.value.filter((task) => !task.completed)   
-    } else {
-      return tasks.value
-    }
-})
+const newTaskUpdated = (task) => {
+    try {
+      const taskToUpdate = tasks.value.find((item) => item.id === task.id);
+      if (!taskToUpdate) {
+        console.log("Task not found.");
+        return;
+      }
+
+      taskToUpdate.title = task.title;
+      taskToUpdate.description = task.description;
+      taskToUpdate.priority = task.priority;
+      taskToUpdate.completed = task.completed;
+
+      localStorage.setItem("tasks", JSON.stringify(tasks.value));
+
+      console.log('updated: ', tasks.value);
+      
+  } catch (error) {
+    console.log('error: ', error);
+    
+      console.log(error);
+  }
+}
 </script>
