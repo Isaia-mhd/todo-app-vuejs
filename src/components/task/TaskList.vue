@@ -33,7 +33,7 @@
                   </div>
                   <div class="flex gap-2">
                   <button @click="update(task)" class="text-xs bg-green-700 hover:bg-green-500 text-white rounded-md p-2 cursor-pointer"> <Pen :size="14"/> </button>
-                  <button @click="remove(task.id)" class="text-xs bg-red-700 hover:bg-red-500 text-white rounded-md p-2 cursor-pointer"><Trash :size="14"/></button>
+                  <button @click="remove(task)" class="text-xs bg-red-700 hover:bg-red-500 text-white rounded-md p-2 cursor-pointer"><Trash :size="14"/></button>
                   </div>
               </div>
           </li>
@@ -48,13 +48,14 @@
 
 <script setup>
 import { Circle, CircleCheck, Trash, Pen } from '@lucide/vue'
-import { ref, computed, defineProps, defineEmits } from 'vue'
+import { ref, computed, defineProps } from 'vue'
 import UpdateModal from '@/components/UpdateModal.vue'
+import useTaskStore from '@/stores/task'
+const taskStore = useTaskStore()
 
 const props = defineProps({
   tasks: { Type: Array, required: true },
 })
-const emit = defineEmits(['deletetask', 'updatedtask'])
 
 const taskDone = computed(() => {
   return props.tasks.filter((task) => task.completed)
@@ -63,8 +64,13 @@ const taskInprogress = computed(() => {
   return props.tasks.filter((task) => !task.completed)
 })
 
-const remove = (id) => {
-  emit('deletetask', id)
+const remove = (task) => {
+  try {
+    taskStore.delete(task)
+  } catch (error) {
+    console.log('error deleting: ', error);
+    
+  }
 }
 
 const showModal = ref(false)
@@ -81,11 +87,6 @@ const update = (task) => {
   }
 
   showModal.value = true
-}
-
-const handleTaskUpdated = (task) => {
-  emit('updatedtask', task)
-  showModal.value = false
 }
 
 </script>

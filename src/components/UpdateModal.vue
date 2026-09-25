@@ -91,9 +91,10 @@
 <script setup>
 import useAuthStore from "@/stores/auth";
 import { ref, defineProps, defineEmits } from "vue";
+import useTaskStore from '@/stores/task'
 
-const emit = defineEmits(['taskUpdated']);
-
+const taskStore = useTaskStore()
+const emit = defineEmits(['close'])
 const props = defineProps({
   task: { type: Object, required: true },
 });
@@ -104,12 +105,17 @@ const priority = ref(props.task.priority);
 const completed = ref(props.task.completed);
 
 const updateTask = () => {
-    emit('taskUpdated', {
-        id: props.task.id,
-        title: title.value,
-        description: description.value,
-        priority: priority.value,
-        completed: completed.value
-    });
+    try {
+      taskStore.update({
+          id: props.task.id,
+          title: title.value,
+          description: description.value,
+          priority: priority.value,
+          completed: completed.value
+      })
+      emit('close')
+    } catch (error) {
+      console.log('error updating: ', error);
+    }
 };
 </script>

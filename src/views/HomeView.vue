@@ -14,7 +14,7 @@
       </form>
     </div>
     <p v-if="error" class="text-red-500 text-sm mb-6">{{ error }}</p>
-    <TaskList :tasks="tasks" @deletetask="removeTask" @updatedtask="newTaskUpdated"/>
+    <TaskList :tasks="tasks"/>
     
   </div>
 </template>
@@ -26,8 +26,12 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import useAuthStore from '@/stores/auth'
+import useTaskStore from '@/stores/task'
 const auth = useAuthStore()
+const taskStore = useTaskStore()
+
 const { user } = storeToRefs(auth)
+const { tasks } = storeToRefs(taskStore)
 const router = useRouter()
 
 onMounted(() => {
@@ -37,62 +41,33 @@ onMounted(() => {
     }
 })
 
-const tasks = ref(JSON.parse(localStorage.getItem('tasks'))) || ref([])
 const type = ref('all')
 const title = ref(null)
 const error = ref(null)
 
-const removeTask = (taskToRemove) => 
-{
-  const newTasks = tasks.value.filter((task) => task.id != taskToRemove)
-  tasks.value = newTasks
-  localStorage.setItem('tasks', JSON.stringify(newTasks))
-}
 const create = () => 
   {
-    if(title.value === "")
-    {
-      error.value = 'The title field is required'
-      return;
-    } 
-    
-    tasks.value.push({
-      id: Date.now(),
-      title: title.value,
-      description: '',
-      priority: '',
-      completed: false
-    })
-    
-    // tasks.value = JSON.parse(localStorage.getItem('tasks'))
-    localStorage.setItem('tasks', JSON.stringify(tasks.value))
-
-    title.value = null
-    error.value = null
-
-}
-
-const newTaskUpdated = (task) => {
     try {
-      const taskToUpdate = tasks.value.find((item) => item.id === task.id);
-      if (!taskToUpdate) {
-        console.log("Task not found.");
+      if(!title.value)
+      {
+        error.value = 'The title field is required'
         return;
-      }
-
-      taskToUpdate.title = task.title;
-      taskToUpdate.description = task.description;
-      taskToUpdate.priority = task.priority;
-      taskToUpdate.completed = task.completed;
-
-      localStorage.setItem("tasks", JSON.stringify(tasks.value));
-
-      console.log('updated: ', tasks.value);
+      } 
       
-  } catch (error) {
-    console.log('error: ', error);
-    
-      console.log(error);
-  }
+      taskStore.create({
+        id: Date.now(),
+        title: title.value,
+        description: '',
+        priority: '',
+        completed: false
+      })
+
+      title.value = null
+      error.value = null
+
+    } catch (error) {
+      console.log('error creating: ', error);
+    }
+
 }
 </script>
