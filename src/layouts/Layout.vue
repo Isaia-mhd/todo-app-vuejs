@@ -18,7 +18,7 @@
 
     <footer>
         <div class="bg-gray-900 text-white p-4 text-center">
-            &copy; 2024 My App. All rights reserved.
+            &copy; {{ new Date().getFullYear() }} Todo App. All rights reserved.
         </div>
     </footer>
   </div>

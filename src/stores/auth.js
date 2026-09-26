@@ -30,7 +30,6 @@ const useAuthStore = defineStore('auth', {
                 return res.data
 
             } catch (error) {
-                console.log('Login error: ', error);
                 
                 throw error
             }

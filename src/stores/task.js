@@ -70,7 +70,6 @@ const useTaskStore = defineStore('task', {
         finishMany(selected)
         {
             try {
-                console.log(selected);
                 
                 this.tasks.forEach(task => {
                     if(selected.includes(task.id))
@@ -78,9 +77,8 @@ const useTaskStore = defineStore('task', {
                         task.completed = true
                     }
                 });
-                this.sucessMessage = selected.length + " " + "task(s) marked as done."
-                console.log("done");
                 
+                this.sucessMessage = selected.length + " " + "task(s) marked as done."
 
                 localStorage.setItem('tasks', JSON.stringify(this.tasks))
 
