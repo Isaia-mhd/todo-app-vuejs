@@ -2,7 +2,8 @@ import { defineStore } from "pinia";
 
 const useTaskStore = defineStore('task', {
     state: () => ({
-        tasks: JSON.parse(localStorage.getItem('tasks')) || []
+        tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+        sucessMessage: null 
     }),
     actions: {
         create(newTask)
@@ -16,6 +17,7 @@ const useTaskStore = defineStore('task', {
                     completed: newTask.completed
                 })
                 localStorage.setItem('tasks', JSON.stringify(this.tasks))
+                this.sucessMessage = 'Task added successfully.'
             } catch (error) {
                 throw error
             }
@@ -34,7 +36,8 @@ const useTaskStore = defineStore('task', {
                 taskToUpdate.description = task.description;
                 taskToUpdate.priority = task.priority;
                 taskToUpdate.completed = task.completed;
-
+                
+                this.sucessMessage = 'Task updated successfully.'
                 localStorage.setItem("tasks", JSON.stringify(this.tasks));
 
             } catch (error) {
@@ -46,6 +49,7 @@ const useTaskStore = defineStore('task', {
             try {
                 const newTasks = this.tasks.filter((task) => task.id != taskToRemove.id)
                 this.tasks = newTasks
+                this.sucessMessage = 'Task deleted successfully.'
                 localStorage.setItem('tasks', JSON.stringify(newTasks))
             } catch (error) {
                 throw error

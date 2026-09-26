@@ -13,7 +13,12 @@
         </form>
       </div>
     </div>
-    <p v-if="error" class="text-red-500 text-sm mb-6">{{ error }}</p>
+
+    <!-- Success message -->
+    <div class="w-full border-2 border-green-100 bg-green-50 text-green-500 rounded-md py-2 px-3 text-left mb-6" v-if="sucessMessage">
+      <p>{{ sucessMessage }}</p>
+    </div>
+
     <TaskList />
 
     <CreateModal v-if="showModalCreate" @closemodal="toggleModalCreate"/>
@@ -30,7 +35,9 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import useAuthStore from '@/stores/auth'
 import { Plus } from '@lucide/vue'
+import useTaskStore from '@/stores/task'
 const auth = useAuthStore()
+const { sucessMessage } = storeToRefs(useTaskStore())
 
 const { user } = storeToRefs(auth)
 
@@ -42,10 +49,6 @@ onMounted(() => {
         router.push('/login')
     }
 })
-
-const type = ref('all')
-const title = ref(null)
-const error = ref(null)
 
 const showModalCreate = ref(false)
 
