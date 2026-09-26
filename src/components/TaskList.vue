@@ -2,9 +2,9 @@
   <ul class="flex flex-col gap-2">
     <!-- Taskdone -->
     <div class="p-3 border border-gray-700 rounded-md">
-        <h2 class="text-lg text-white mb-2">Done ({{ taskDone.length }})</h2>
-        <div v-if="taskDone.length > 0">
-          <li v-for="task in taskDone" :key="task.id">
+        <h2 class="text-lg text-white mb-2">Done ({{ taskDones.length }})</h2>
+        <div v-if="taskDones.length > 0">
+          <li v-for="task in taskDones" :key="task.id">
               <div class="w-full flex justify-between py-3 px-3 bg-slate-900 text-white rounded-md mb-1">
                 <div class="cursor-pointer flex gap-2 items-center">
                   <CircleCheck :size="18" color="green"/> 
@@ -12,7 +12,7 @@
                 </div>
                 <div class="flex gap-2">
                   <button @click="update(task)" class="text-xs bg-green-700 hover:bg-green-500 text-white rounded-md p-2 cursor-pointer"> <Pen :size="14"/> </button>
-                  <button @click="remove(task.id)" class="text-xs bg-red-700 hover:bg-red-500 text-white rounded-md p-2 cursor-pointer"><Trash :size="14"/></button>
+                  <button @click="remove(task)" class="text-xs bg-red-700 hover:bg-red-500 text-white rounded-md p-2 cursor-pointer"><Trash :size="14"/></button>
                 </div>
               </div>
           </li>
@@ -43,26 +43,18 @@
   </ul>
   
 
-  <UpdateModal v-if="showModal" :task="taskToUpdate" @close="showModal = false" @taskUpdated="handleTaskUpdated"/>
+  <UpdateModal v-if="showModalUpdate" :task="taskToUpdate" @close="toggleModalUpdate"/>
 </template>
 
 <script setup>
 import { Circle, CircleCheck, Trash, Pen } from '@lucide/vue'
-import { ref, computed, defineProps } from 'vue'
+import { ref } from 'vue'
 import UpdateModal from '@/components/UpdateModal.vue'
 import useTaskStore from '@/stores/task'
+import { storeToRefs } from 'pinia'
+
 const taskStore = useTaskStore()
-
-const props = defineProps({
-  tasks: { Type: Array, required: true },
-})
-
-const taskDone = computed(() => {
-  return props.tasks.filter((task) => task.completed)
-})
-const taskInprogress = computed(() => {
-  return props.tasks.filter((task) => !task.completed)
-})
+const { tasks, taskDones, taskInprogress } = storeToRefs(taskStore)
 
 const remove = (task) => {
   try {
@@ -73,20 +65,16 @@ const remove = (task) => {
   }
 }
 
-const showModal = ref(false)
+const showModalUpdate = ref(false)
+
+const toggleModalUpdate = () => {
+  showModalUpdate.value = !showModalUpdate.value
+}
 
 const taskToUpdate = ref(null)
-
 const update = (task) => {
-
-  taskToUpdate.value = props.tasks.find((t) => t.id === task.id)
-
-  if (!taskToUpdate) {
-    console.log('Task not found.');
-    return
-  }
-
-  showModal.value = true
+  showModalUpdate.value = true
+  taskToUpdate.value = task
 }
 
 </script>

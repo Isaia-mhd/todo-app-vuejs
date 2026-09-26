@@ -8,11 +8,18 @@ const useTaskStore = defineStore('task', {
         create(newTask)
         {
             try {
-                this.tasks.push(newTask)
+                this.tasks.push({
+                    id: Date.now(),
+                    title: newTask.title,
+                    description: newTask.description,
+                    priority: newTask.priority,
+                    completed: newTask.completed
+                })
                 localStorage.setItem('tasks', JSON.stringify(this.tasks))
             } catch (error) {
                 throw error
             }
+            
         },
         update(task)
         {
@@ -43,7 +50,11 @@ const useTaskStore = defineStore('task', {
             } catch (error) {
                 throw error
             }
-        }
+        },
+    },
+    getters: {
+        taskDones: (state) => state.tasks.filter((task) => task.completed),
+        taskInprogress: (state) => state.tasks.filter((task) => !task.completed)
     }
 })
 
