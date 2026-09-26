@@ -5,7 +5,7 @@
         <button @click="toggleModalCreate" class="flex items-center gap-2 bg-blue-500 rounded-md px-3 py-2 text-white cursor-pointer hover:bg-blue-600"><Plus /><span>Add</span></button>
         
         <form class="flex gap-2">
-          <select v-model="priority" class="w-xs text-white bg-slate-800 text-sm p-2 rounded-md border border-gray-400">
+          <select v-model="priority" class="w-xs text-white bg-slate-800 text-sm p-3 rounded-md border border-gray-600">
             <option value="">All</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>

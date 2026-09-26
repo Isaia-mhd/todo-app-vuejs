@@ -66,6 +66,19 @@ const useAuthStore = defineStore('auth', {
                 this.authChecked = true
             }
             
+        },
+        async logout()
+        {
+            try {
+                await this.getToken()
+                await axios.post('/api/logout')
+                this.user = null
+
+            } catch (error) {
+                throw error
+            } finally {
+                this.authChecked = true
+            }
         }
     },
     // getters

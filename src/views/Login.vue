@@ -2,6 +2,7 @@
  <div class="w-full max-w-md mx-auto mt-10 p-8 bg-slate-900 rounded-md shadow-md my-20">
     <h2 class="text-2xl font-bold text-white">Connection</h2>
     <p class="text-gray-300">Please enter your credentials to log in.</p>
+    <p v-if="error" class="text-red-500 text-sm bg-slate-700 border border-slate-600 rounded-md py-2 px-3">{{ error }}</p>
     <form @submit.prevent="handleLogin" class="mt-4 space-y-4">
       <div>
         <label class="block text-sm font-medium text-gray-300">E-mail:</label>
@@ -28,6 +29,7 @@ const auth = useAuthStore()
 const { user } = storeToRefs(auth)
 const router = useRouter()
 const loading = ref(false)
+const error = ref(null)
 
 
 
@@ -49,9 +51,9 @@ const handleLogin = async () => {
         loading.value = false
         router.push('/')
 
-    } catch (error) {
+    } catch (err) {
         loading.value = false
-        
+        error.value = err?.response.data?.message
     }
 }
 
