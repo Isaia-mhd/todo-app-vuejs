@@ -3,7 +3,8 @@ import { defineStore } from "pinia";
 const useTaskStore = defineStore('task', {
     state: () => ({
         tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-        sucessMessage: null 
+        sucessMessage: null,
+        filter: '' 
     }),
     actions: {
         create(newTask)
@@ -54,12 +55,12 @@ const useTaskStore = defineStore('task', {
             } catch (error) {
                 throw error
             }
-        },
+        }
     },
     getters: {
         taskDones: (state) => state.tasks.filter((task) => task.completed),
-        taskInprogress: (state) => state.tasks.filter((task) => !task.completed)
-    }
+        taskInprogress: (state) => state.tasks.filter((task) => !task.completed),
+     }
 })
 
 export default useTaskStore

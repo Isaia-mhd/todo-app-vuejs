@@ -5,21 +5,22 @@
         <button @click="toggleModalCreate" class="flex items-center gap-2 bg-blue-500 rounded-md px-3 py-2 text-white cursor-pointer hover:bg-blue-600"><Plus /><span>Add</span></button>
         
         <form class="flex gap-2">
-          <select v-model="type" class="w-xs text-white bg-slate-800 text-sm p-2 rounded-md border border-gray-400">
-            <option value="all">All</option>
-            <option value="completed">Completed</option>
-            <option value="progress">In progress</option>
+          <select v-model="priority" class="w-xs text-white bg-slate-800 text-sm p-2 rounded-md border border-gray-400">
+            <option value="">All</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
           </select>
         </form>
       </div>
     </div>
 
     <!-- Success message -->
-    <div class="w-full border-2 border-green-100 bg-green-50 text-green-500 rounded-md py-2 px-3 text-left mb-6" v-if="sucessMessage">
+    <div class="w-full border-1 border-slate-600 bg-slate-700 text-green-500 rounded-md py-2 px-3 text-left mb-6" v-if="sucessMessage">
       <p>{{ sucessMessage }}</p>
     </div>
 
-    <TaskList />
+    <TaskList :filter="priority"/>
 
     <CreateModal v-if="showModalCreate" @closemodal="toggleModalCreate"/>
     
@@ -30,7 +31,7 @@
 // @ is an alias to /src
 import TaskList from '@/components/TaskList.vue'
 import CreateModal from '@/components/CreateModal.vue'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import useAuthStore from '@/stores/auth'
@@ -49,6 +50,8 @@ onMounted(() => {
         router.push('/login')
     }
 })
+
+const priority = ref('')
 
 const showModalCreate = ref(false)
 

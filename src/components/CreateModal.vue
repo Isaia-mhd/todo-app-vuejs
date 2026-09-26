@@ -26,7 +26,7 @@
             for="description"
             class="block text-sm font-medium text-white"
           >
-            Description ({{ task.description }})
+            Description
           </label>
 
           <textarea
