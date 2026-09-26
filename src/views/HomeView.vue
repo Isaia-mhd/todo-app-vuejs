@@ -21,7 +21,7 @@
       <p>{{ sucessMessage }}</p>
     </div>
 
-    <TaskList :filter="priority" @selected="taskSelect"/>
+    <TaskList ref="childRef" :filter="priority" @selected="taskSelect"/>
 
     <CreateModal v-if="showModalCreate" @closemodal="toggleModalCreate"/>
     
@@ -66,16 +66,27 @@ const taskSelect = (selectedTasks) =>
 {
   selected.value = selectedTasks
 }
-
+const childRef = ref(null)
 const finish = () => 
 {
-  console.log("Finished");
+  
+  try {
+    taskStore.finishMany(selected.value)
+    selected.value = []
+
+    // call the fn provided by child component (TaskList)
+    childRef.value.clearSelectedTasks()
+  } catch (error) {
+    console.log("Error finishing");
+    
+  }
   
 }
 
 const destroy = () => {
   try {
     taskStore.deleteMany(selected.value)
+    selected.value = []
   } catch (error) {
     console.log("Error destroying");
     

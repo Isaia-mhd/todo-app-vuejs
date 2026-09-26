@@ -66,6 +66,27 @@ const useTaskStore = defineStore('task', {
             } catch (error) {
                 throw error
             }
+        },
+        finishMany(selected)
+        {
+            try {
+                console.log(selected);
+                
+                this.tasks.forEach(task => {
+                    if(selected.includes(task.id))
+                    {
+                        task.completed = true
+                    }
+                });
+                this.sucessMessage = selected.length + " " + "task(s) marked as done."
+                console.log("done");
+                
+
+                localStorage.setItem('tasks', JSON.stringify(this.tasks))
+
+            } catch (error) {
+                throw error
+            }
         }
     },
     getters: {

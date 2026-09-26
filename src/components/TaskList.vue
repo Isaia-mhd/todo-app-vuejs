@@ -48,7 +48,7 @@
 
 <script setup>
 import { Circle, CircleCheck, Trash, Pen } from '@lucide/vue'
-import { ref, defineProps, watch, computed, defineEmits } from 'vue'
+import { ref, defineProps, watch, computed, defineEmits, provide, inject } from 'vue'
 import UpdateModal from '@/components/UpdateModal.vue'
 import useTaskStore from '@/stores/task'
 import { storeToRefs } from 'pinia'
@@ -104,6 +104,15 @@ const toggleSelectTask = (taskId) => {
 
   emit('selected', selectedTasks.value)
 }
+
+const clearSelectedTasks = () => {
+  selectedTasks.value = []
+}
+
+// Allow parent to access this fn
+defineExpose({
+  clearSelectedTasks
+})
 
 // clear the selected when user is doing a filter
 watch(
