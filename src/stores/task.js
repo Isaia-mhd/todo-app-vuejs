@@ -55,6 +55,17 @@ const useTaskStore = defineStore('task', {
             } catch (error) {
                 throw error
             }
+        },
+        deleteMany(selected)
+        {
+            try {
+                this.tasks = this.tasks.filter(task => !selected.includes(task.id))
+                localStorage.setItem('tasks', JSON.stringify(this.tasks))
+                this.sucessMessage = selected.length + " " + "task(s) deleted successfully."
+                
+            } catch (error) {
+                throw error
+            }
         }
     },
     getters: {

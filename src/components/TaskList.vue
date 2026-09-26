@@ -7,7 +7,8 @@
           <li v-for="task in tasksFiltered" :key="task.id" class="">
               <div class="w-full flex justify-between py-3 px-3 bg-slate-900 text-white rounded-md mb-1">
                   <div class="cursor-pointer flex gap-2 items-center">
-                  <Circle :size="18"/>
+                  <Circle :size="18" @click="toggleSelectTask(task.id)" v-if="!selectedTasks.includes(task.id)"/>
+                  <CircleCheck :size="18" @click="toggleSelectTask(task.id)" v-if="selectedTasks.includes(task.id)"/>
                   <p>{{ task.title }} <span class="text-xs px-4 py-1 rounded-full text-white" :class="task.priority === 'low' ? 'bg-blue-400' : task.priority === 'medium' ? 'bg-amber-500' : 'bg-red-500' ">{{ task.priority }}</span> </p>
                   </div>
                   <div class="flex gap-2">
@@ -47,7 +48,7 @@
 
 <script setup>
 import { Circle, CircleCheck, Trash, Pen } from '@lucide/vue'
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch, computed, defineEmits } from 'vue'
 import UpdateModal from '@/components/UpdateModal.vue'
 import useTaskStore from '@/stores/task'
 import { storeToRefs } from 'pinia'
@@ -55,6 +56,7 @@ import { storeToRefs } from 'pinia'
 const props = defineProps({
   filter: { type: String }
 })
+const emit = defineEmits(['selected'])
 
 const taskStore = useTaskStore()
 const { taskDones, taskInprogress } = storeToRefs(taskStore)
@@ -88,6 +90,28 @@ const update = (task) => {
   showModalUpdate.value = true
   taskToUpdate.value = task
 }
+
+const selectedTasks = ref([])
+
+const toggleSelectTask = (taskId) => {
+  if(selectedTasks.value.includes(taskId))
+  {
+    selectedTasks.value = selectedTasks.value.filter(id => id != taskId)
+
+  } else{
+    selectedTasks.value.push(taskId)
+  }
+
+  emit('selected', selectedTasks.value)
+}
+
+// clear the selected when user is doing a filter
+watch(
+  () => props.filter, 
+  (newVal) => {
+  selectedTasks.value = []
+  emit('selected', selectedTasks.value)
+})
 
 </script>
 

@@ -3,7 +3,8 @@
     <div class="flex justify-between items-center gap-2 mb-3">
       <div class="flex items-center gap-2">
         <button @click="toggleModalCreate" class="flex items-center gap-2 bg-blue-500 rounded-md px-3 py-2 text-white cursor-pointer hover:bg-blue-600"><Plus /><span>Add</span></button>
-        
+        <button @click="finish" :disabled="!selected.length" class="flex items-center gap-2 bg-blue-500 rounded-md px-3 py-2 text-white cursor-pointer hover:bg-blue-600 disabled:bg-gray-500 disabled:cursor-not-allowed"><Check /><span>Finish ({{ selected.length   }})</span></button>
+        <button @click="destroy" :disabled="!selected.length" class="flex items-center gap-2 bg-blue-500 rounded-md px-3 py-2 text-white cursor-pointer hover:bg-blue-600 disabled:bg-gray-500 disabled:cursor-not-allowed"><Check /><span>Delete ({{ selected.length   }})</span></button>
         <form class="flex gap-2">
           <select v-model="priority" class="w-xs text-white bg-slate-800 text-sm p-3 rounded-md border border-gray-600">
             <option value="">All</option>
@@ -20,7 +21,7 @@
       <p>{{ sucessMessage }}</p>
     </div>
 
-    <TaskList :filter="priority"/>
+    <TaskList :filter="priority" @selected="taskSelect"/>
 
     <CreateModal v-if="showModalCreate" @closemodal="toggleModalCreate"/>
     
@@ -35,10 +36,11 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import useAuthStore from '@/stores/auth'
-import { Plus } from '@lucide/vue'
+import { Plus, Check } from '@lucide/vue'
 import useTaskStore from '@/stores/task'
 const auth = useAuthStore()
-const { sucessMessage } = storeToRefs(useTaskStore())
+const taskStore = useTaskStore()
+const { sucessMessage } = storeToRefs(taskStore)
 
 const { user } = storeToRefs(auth)
 
@@ -58,5 +60,27 @@ const showModalCreate = ref(false)
 const toggleModalCreate = () => {
   showModalCreate.value = !showModalCreate.value
 } 
+
+const selected = ref([])
+const taskSelect = (selectedTasks) =>
+{
+  selected.value = selectedTasks
+}
+
+const finish = () => 
+{
+  console.log("Finished");
+  
+}
+
+const destroy = () => {
+  try {
+    taskStore.deleteMany(selected.value)
+  } catch (error) {
+    console.log("Error destroying");
+    
+  }
+  
+}
 
 </script>
